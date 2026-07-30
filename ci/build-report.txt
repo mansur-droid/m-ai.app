@@ -1,4 +1,4 @@
-Commit: 268479fe605b31f9268ba62c0049f27270f45a87
+Commit: f276dbabbeb13351fa40397d316459363071c5fe
 
 === npm run typecheck ===
 
@@ -9,59 +9,7 @@ Commit: 268479fe605b31f9268ba62c0049f27270f45a87
 === npm run build ===
 
 > m-ai@0.2.0 build
-> next build
-
-⚠ No build cache found. Please configure build caching for faster rebuilds. Read more: https://nextjs.org/docs/messages/no-cache
-Attention: Next.js now collects completely anonymous telemetry regarding usage.
-This information is used to shape Next.js' roadmap and prioritize features.
-You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
-https://nextjs.org/telemetry
-
-   ▲ Next.js 15.5.2
-
-   Creating an optimized production build ...
-<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (106kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
-<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (250kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
- ⚠ Compiled with warnings in 1896ms
-
-./node_modules/@supabase/supabase-js/dist/index.mjs
-A Node.js API is used (process.version at line: 27) which is not supported in the Edge Runtime.
-Learn more: https://nextjs.org/docs/api-reference/edge-runtime
-
-Import trace for requested module:
-./node_modules/@supabase/supabase-js/dist/index.mjs
-./node_modules/@supabase/ssr/dist/module/createServerClient.js
-./node_modules/@supabase/ssr/dist/module/index.js
-
- ✓ Compiled successfully in 8.4s
-   Linting and checking validity of types ...
-   Collecting page data ...
-   Generating static pages (0/6) ...
-   Generating static pages (1/6) 
-   Generating static pages (2/6) 
-   Generating static pages (4/6) 
- ✓ Generating static pages (6/6)
-   Finalizing page optimization ...
-   Collecting build traces ...
-
-Route (app)                                 Size  First Load JS
-┌ ○ /                                    3.38 kB         105 kB
-├ ○ /_not-found                            991 B         103 kB
-├ ƒ /api/ai/chat                           132 B         102 kB
-├ ƒ /api/ai/models/[provider]              132 B         102 kB
-├ ƒ /api/ai/providers                      132 B         102 kB
-├ ƒ /auth/callback                         132 B         102 kB
-└ ○ /login                               66.4 kB         168 kB
-+ First Load JS shared by all             102 kB
-  ├ chunks/255-e3bf15caf1f1e0f9.js       45.7 kB
-  ├ chunks/4bd1b696-c023c6e3521b1417.js  54.2 kB
-  └ other shared chunks (total)          1.92 kB
-
-
-ƒ Middleware                             90.4 kB
-
-○  (Static)   prerendered as static content
-ƒ  (Dynamic)  server-rendered on demand
+> tsc --noEmit
 
 
 TYPECHECK_EXIT=0
