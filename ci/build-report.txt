@@ -1,4 +1,4 @@
-Commit: 5eaa1ed06dc70e0363eb9a1e185f71dbce9a2f7a
+Commit: 268479fe605b31f9268ba62c0049f27270f45a87
 
 === npm run typecheck ===
 
@@ -22,7 +22,7 @@ https://nextjs.org/telemetry
    Creating an optimized production build ...
 <w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (106kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
 <w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (250kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
- ⚠ Compiled with warnings in 1282ms
+ ⚠ Compiled with warnings in 1896ms
 
 ./node_modules/@supabase/supabase-js/dist/index.mjs
 A Node.js API is used (process.version at line: 27) which is not supported in the Edge Runtime.
@@ -30,10 +30,10 @@ Learn more: https://nextjs.org/docs/api-reference/edge-runtime
 
 Import trace for requested module:
 ./node_modules/@supabase/supabase-js/dist/index.mjs
-./node_modules/@supabase/ssr/dist/module/createBrowserClient.js
+./node_modules/@supabase/ssr/dist/module/createServerClient.js
 ./node_modules/@supabase/ssr/dist/module/index.js
 
- ✓ Compiled successfully in 5.6s
+ ✓ Compiled successfully in 8.4s
    Linting and checking validity of types ...
    Collecting page data ...
    Generating static pages (0/6) ...
