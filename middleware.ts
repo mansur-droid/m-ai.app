@@ -7,7 +7,7 @@ const publicRoutes = ['/login', '/auth/callback'];
 type CookieToSet = {
   name: string;
   value: string;
-  options: CookieOptions;
+  options?: CookieOptions;
 };
 
 export async function middleware(request: NextRequest) {
