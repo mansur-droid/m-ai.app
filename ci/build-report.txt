@@ -1,0 +1,122 @@
+Commit: 15224e200cfcdce8ef53b855e8ab7155dab06114
+
+=== npm run typecheck ===
+
+> m-ai@0.2.0 typecheck
+> tsc --noEmit
+
+node_modules/@supabase/ssr/dist/main/createBrowserClient.d.ts(2,59): error TS2307: Cannot find module '@supabase/supabase-js/dist/module/lib/types' or its corresponding type declarations.
+node_modules/@supabase/ssr/dist/main/createBrowserClient.d.ts(26,30): error TS2344: Type 'SchemaName' does not satisfy the constraint '{ PostgrestVersion: string; } | (string & Exclude<keyof Database, "__InternalSupabase">)'.
+  Type 'string & keyof Database' is not assignable to type '{ PostgrestVersion: string; } | (string & Exclude<keyof Database, "__InternalSupabase">)'.
+    Type 'string & keyof Database' is not assignable to type 'string & Exclude<keyof Database, "__InternalSupabase">'.
+      Type 'string & keyof Database' is not assignable to type 'Exclude<keyof Database, "__InternalSupabase">'.
+        Type 'SchemaName' is not assignable to type 'string & Exclude<keyof Database, "__InternalSupabase">'.
+          Type 'string & keyof Database' is not assignable to type 'string & Exclude<keyof Database, "__InternalSupabase">'.
+            Type 'string & keyof Database' is not assignable to type 'Exclude<keyof Database, "__InternalSupabase">'.
+              Type 'SchemaName' is not assignable to type 'Exclude<keyof Database, "__InternalSupabase">'.
+                Type 'string & keyof Database' is not assignable to type 'Exclude<keyof Database, "__InternalSupabase">'.
+node_modules/@supabase/ssr/dist/main/createBrowserClient.d.ts(37,30): error TS2344: Type 'SchemaName' does not satisfy the constraint '{ PostgrestVersion: string; } | (string & Exclude<keyof Database, "__InternalSupabase">)'.
+  Type 'string & keyof Database' is not assignable to type '{ PostgrestVersion: string; } | (string & Exclude<keyof Database, "__InternalSupabase">)'.
+    Type 'string & keyof Database' is not assignable to type 'string & Exclude<keyof Database, "__InternalSupabase">'.
+      Type 'string & keyof Database' is not assignable to type 'Exclude<keyof Database, "__InternalSupabase">'.
+        Type 'SchemaName' is not assignable to type 'string & Exclude<keyof Database, "__InternalSupabase">'.
+          Type 'string & keyof Database' is not assignable to type 'string & Exclude<keyof Database, "__InternalSupabase">'.
+            Type 'string & keyof Database' is not assignable to type 'Exclude<keyof Database, "__InternalSupabase">'.
+              Type 'SchemaName' is not assignable to type 'Exclude<keyof Database, "__InternalSupabase">'.
+                Type 'string & keyof Database' is not assignable to type 'Exclude<keyof Database, "__InternalSupabase">'.
+node_modules/@supabase/ssr/dist/main/createServerClient.d.ts(2,59): error TS2307: Cannot find module '@supabase/supabase-js/dist/module/lib/types' or its corresponding type declarations.
+node_modules/@supabase/ssr/dist/main/createServerClient.d.ts(13,30): error TS2344: Type 'SchemaName' does not satisfy the constraint '{ PostgrestVersion: string; } | (string & Exclude<keyof Database, "__InternalSupabase">)'.
+  Type 'string & keyof Database' is not assignable to type '{ PostgrestVersion: string; } | (string & Exclude<keyof Database, "__InternalSupabase">)'.
+    Type 'string & keyof Database' is not assignable to type 'string & Exclude<keyof Database, "__InternalSupabase">'.
+      Type 'string & keyof Database' is not assignable to type 'Exclude<keyof Database, "__InternalSupabase">'.
+        Type 'SchemaName' is not assignable to type 'string & Exclude<keyof Database, "__InternalSupabase">'.
+          Type 'string & keyof Database' is not assignable to type 'string & Exclude<keyof Database, "__InternalSupabase">'.
+            Type 'string & keyof Database' is not assignable to type 'Exclude<keyof Database, "__InternalSupabase">'.
+              Type 'SchemaName' is not assignable to type 'Exclude<keyof Database, "__InternalSupabase">'.
+                Type 'string & keyof Database' is not assignable to type 'Exclude<keyof Database, "__InternalSupabase">'.
+node_modules/@supabase/ssr/dist/main/createServerClient.d.ts(79,30): error TS2344: Type 'SchemaName' does not satisfy the constraint '{ PostgrestVersion: string; } | (string & Exclude<keyof Database, "__InternalSupabase">)'.
+  Type 'string & keyof Database' is not assignable to type '{ PostgrestVersion: string; } | (string & Exclude<keyof Database, "__InternalSupabase">)'.
+    Type 'string & keyof Database' is not assignable to type 'string & Exclude<keyof Database, "__InternalSupabase">'.
+      Type 'string & keyof Database' is not assignable to type 'Exclude<keyof Database, "__InternalSupabase">'.
+        Type 'SchemaName' is not assignable to type 'string & Exclude<keyof Database, "__InternalSupabase">'.
+          Type 'string & keyof Database' is not assignable to type 'string & Exclude<keyof Database, "__InternalSupabase">'.
+            Type 'string & keyof Database' is not assignable to type 'Exclude<keyof Database, "__InternalSupabase">'.
+              Type 'SchemaName' is not assignable to type 'Exclude<keyof Database, "__InternalSupabase">'.
+                Type 'string & keyof Database' is not assignable to type 'Exclude<keyof Database, "__InternalSupabase">'.
+node_modules/next/dist/server/route-modules/app-page/vendored/rsc/entrypoints.d.ts(2,27): error TS7016: Could not find a declaration file for module 'react-dom'. '/home/runner/work/m-ai.app/m-ai.app/node_modules/react-dom/index.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/react-dom` if it exists or add a new declaration (.d.ts) file containing `declare module 'react-dom';`
+node_modules/next/dist/server/route-modules/app-page/vendored/ssr/entrypoints.d.ts(2,27): error TS7016: Could not find a declaration file for module 'react-dom'. '/home/runner/work/m-ai.app/m-ai.app/node_modules/react-dom/index.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/react-dom` if it exists or add a new declaration (.d.ts) file containing `declare module 'react-dom';`
+node_modules/next/dist/server/route-modules/app-page/vendored/ssr/entrypoints.d.ts(6,33): error TS7016: Could not find a declaration file for module 'react-dom/server'. '/home/runner/work/m-ai.app/m-ai.app/node_modules/react-dom/server.node.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/react-dom` if it exists or add a new declaration (.d.ts) file containing `declare module 'react-dom/server';`
+node_modules/next/dist/types.d.ts(4,23): error TS2688: Cannot find type definition file for 'react-dom'.
+node_modules/next/dist/types.d.ts(5,23): error TS2688: Cannot find type definition file for 'react-dom/experimental'.
+
+=== npm run build ===
+
+> m-ai@0.2.0 build
+> next build
+
+⚠ No build cache found. Please configure build caching for faster rebuilds. Read more: https://nextjs.org/docs/messages/no-cache
+Attention: Next.js now collects completely anonymous telemetry regarding usage.
+This information is used to shape Next.js' roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://nextjs.org/telemetry
+
+   ▲ Next.js 15.5.2
+
+   Creating an optimized production build ...
+<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (106kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
+<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (250kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
+ ⚠ Compiled with warnings in 1809ms
+
+./node_modules/@supabase/supabase-js/dist/index.mjs
+A Node.js API is used (process.version at line: 27) which is not supported in the Edge Runtime.
+Learn more: https://nextjs.org/docs/api-reference/edge-runtime
+
+Import trace for requested module:
+./node_modules/@supabase/supabase-js/dist/index.mjs
+./node_modules/@supabase/ssr/dist/module/createBrowserClient.js
+./node_modules/@supabase/ssr/dist/module/index.js
+
+ ✓ Compiled successfully in 8.1s
+   Linting and checking validity of types ...
+
+   We detected TypeScript in your project and reconfigured your tsconfig.json file for you.
+   The following suggested values were added to your tsconfig.json. These values can be changed to fit your project's needs:
+
+   	- lib was set to dom,dom.iterable,esnext
+   	- allowJs was set to true
+   	- skipLibCheck was set to true
+   	- noEmit was set to true
+   	- incremental was set to true
+   	- include was set to ['next-env.d.ts', '.next/types/**/*.ts', '**/*.ts', '**/*.tsx']
+   	- plugins was updated to add { name: 'next' }
+   	- exclude was set to ['node_modules']
+
+   The following mandatory changes were made to your tsconfig.json:
+
+   	- esModuleInterop was set to true (requirement for SWC / babel)
+   	- resolveJsonModule was set to true (to match webpack resolution)
+   	- isolatedModules was set to true (requirement for SWC / Babel)
+
+   Collecting page data ...
+   Generating static pages (0/6) ...
+   Generating static pages (1/6) 
+ ⨯ useSearchParams() should be wrapped in a suspense boundary at page "/login". Read more: https://nextjs.org/docs/messages/missing-suspense-with-csr-bailout
+    at g (/home/runner/work/m-ai.app/m-ai.app/.next/server/chunks/361.js:9:55016)
+    at m (/home/runner/work/m-ai.app/m-ai.app/.next/server/chunks/361.js:1:25404)
+    at c9 (/home/runner/work/m-ai.app/m-ai.app/.next/server/app/login/page.js:37:64292)
+    at n3 (/home/runner/work/m-ai.app/m-ai.app/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:2:82831)
+    at n6 (/home/runner/work/m-ai.app/m-ai.app/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:2:84601)
+    at n5 (/home/runner/work/m-ai.app/m-ai.app/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:2:104801)
+    at n7 (/home/runner/work/m-ai.app/m-ai.app/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:2:102219)
+    at n8 (/home/runner/work/m-ai.app/m-ai.app/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:2:83183)
+    at n6 (/home/runner/work/m-ai.app/m-ai.app/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:2:84647)
+    at n6 (/home/runner/work/m-ai.app/m-ai.app/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:2:101560)
+Error occurred prerendering page "/login". Read more: https://nextjs.org/docs/messages/prerender-error
+Export encountered an error on /login/page: /login, exiting the build.
+ ⨯ Next.js build worker exited with code: 1 and signal: null
+
+TYPECHECK_EXIT=2
+BUILD_EXIT=1
