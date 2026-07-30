@@ -8,10 +8,58 @@ import {
 } from '@/lib/ai/types';
 import { getProviderApiKey } from '@/lib/ai/providers';
 
+type JsonRecord = Record<string, unknown>;
+
+type OpenAIUsage = {
+  prompt_tokens?: number;
+  completion_tokens?: number;
+  total_tokens?: number;
+};
+
+type OpenAIChatResponse = {
+  model?: string;
+  choices?: Array<{ message?: { content?: string } }>;
+  usage?: OpenAIUsage;
+};
+
+type AnthropicContentBlock = {
+  type?: string;
+  text?: string;
+};
+
+type AnthropicChatResponse = {
+  model?: string;
+  content?: AnthropicContentBlock[];
+  usage?: {
+    input_tokens?: number;
+    output_tokens?: number;
+  };
+};
+
+type GeminiPart = {
+  text?: string;
+};
+
+type GeminiChatResponse = {
+  candidates?: Array<{ content?: { parts?: GeminiPart[] } }>;
+  usageMetadata?: {
+    promptTokenCount?: number;
+    candidatesTokenCount?: number;
+    totalTokenCount?: number;
+  };
+};
+
+async function readJsonObject(response: Response): Promise<JsonRecord> {
+  const payload: unknown = await response.json().catch(() => ({}));
+  return payload !== null && typeof payload === 'object' && !Array.isArray(payload)
+    ? payload as JsonRecord
+    : {};
+}
+
 async function readError(response: Response): Promise<unknown> {
   const text = await response.text();
   try {
-    return JSON.parse(text);
+    return JSON.parse(text) as unknown;
   } catch {
     return text;
   }
@@ -75,8 +123,11 @@ export class HttpAIProvider implements AIProvider {
       assertOk(response, this.config, details);
     }
 
-    const payload = await response.json() as Record<string, unknown>;
-    const rawModels = (payload.data ?? payload.models ?? []) as Array<Record<string, unknown>>;
+    const payload = await readJsonObject(response);
+    const candidateModels = payload.data ?? payload.models;
+    const rawModels = Array.isArray(candidateModels)
+      ? candidateModels.filter((model): model is JsonRecord => model !== null && typeof model === 'object' && !Array.isArray(model))
+      : [];
 
     return rawModels
       .map((model): ModelDescriptor | null => {
@@ -88,7 +139,9 @@ export class HttpAIProvider implements AIProvider {
           : [];
         if (this.config.protocol === 'gemini' && methods.length && !methods.includes('generateContent')) return null;
 
-        const architecture = (model.architecture ?? {}) as Record<string, unknown>;
+        const architecture = model.architecture !== null && typeof model.architecture === 'object' && !Array.isArray(model.architecture)
+          ? model.architecture as JsonRecord
+          : {};
         return {
           id,
           name: String(model.displayName ?? model.name ?? id),
@@ -102,7 +155,7 @@ export class HttpAIProvider implements AIProvider {
             : undefined,
         };
       })
-      .filter((model): model is ModelDescriptor => Boolean(model))
+      .filter((model): model is ModelDescriptor => model !== null)
       .sort((a, b) => a.name.localeCompare(b.name));
   }
 
@@ -127,8 +180,9 @@ export class HttpAIProvider implements AIProvider {
         max_tokens: request.maxOutputTokens,
       }),
     });
-    const payload = await response.json().catch(() => ({})) as Record<string, any>;
-    assertOk(response, this.config, payload);
+    const rawPayload = await readJsonObject(response);
+    assertOk(response, this.config, rawPayload);
+    const payload = rawPayload as OpenAIChatResponse;
 
     return {
       provider: this.config.id,
@@ -159,11 +213,15 @@ export class HttpAIProvider implements AIProvider {
         max_tokens: request.maxOutputTokens ?? 4096,
       }),
     });
-    const payload = await response.json().catch(() => ({})) as Record<string, any>;
-    assertOk(response, this.config, payload);
+    const rawPayload = await readJsonObject(response);
+    assertOk(response, this.config, rawPayload);
+    const payload = rawPayload as AnthropicChatResponse;
 
     const text = Array.isArray(payload.content)
-      ? payload.content.filter((block: any) => block.type === 'text').map((block: any) => block.text).join('')
+      ? payload.content
+          .filter((block): block is AnthropicContentBlock & { type: 'text'; text: string } => block.type === 'text' && typeof block.text === 'string')
+          .map((block) => block.text)
+          .join('')
       : '';
 
     return {
@@ -200,11 +258,14 @@ export class HttpAIProvider implements AIProvider {
         }),
       },
     );
-    const payload = await response.json().catch(() => ({})) as Record<string, any>;
-    assertOk(response, this.config, payload);
+    const rawPayload = await readJsonObject(response);
+    assertOk(response, this.config, rawPayload);
+    const payload = rawPayload as GeminiChatResponse;
 
     const parts = payload.candidates?.[0]?.content?.parts;
-    const text = Array.isArray(parts) ? parts.map((part: any) => part.text ?? '').join('') : '';
+    const text = Array.isArray(parts)
+      ? parts.map((part) => part.text ?? '').join('')
+      : '';
 
     return {
       provider: this.config.id,
