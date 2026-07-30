@@ -1,7 +1,7 @@
 'use client';
 
 import { FormEvent, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { hasSupabaseEnv } from '@/lib/env';
 
@@ -9,7 +9,6 @@ type AuthMode = 'login' | 'signup';
 
 export default function LoginPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [mode, setMode] = useState<AuthMode>('login');
   const [displayName, setDisplayName] = useState('');
   const [email, setEmail] = useState('');
@@ -47,7 +46,8 @@ export default function LoginPage() {
     setLoading(false);
     if (error) return setMessage(error.message);
 
-    router.replace(searchParams.get('next') || '/');
+    const nextPath = new URLSearchParams(window.location.search).get('next') || '/';
+    router.replace(nextPath.startsWith('/') ? nextPath : '/');
     router.refresh();
   }
 
@@ -64,9 +64,9 @@ export default function LoginPage() {
         <p style={{ color: '#aaa6b8', margin: '0 0 26px', lineHeight: 1.6 }}>{mode === 'login' ? 'Sign in to access your conversations, files and AI tools.' : 'Your data is isolated by account-level database security.'}</p>
 
         <form onSubmit={submit} style={{ display: 'grid', gap: 14 }}>
-          {mode === 'signup' && <label style={{ display: 'grid', gap: 7, fontSize: 13, color: '#c8c5d2' }}>Display name<input required value={displayName} onChange={(e) => setDisplayName(e.target.value)} style={inputStyle} autoComplete="name" /></label>}
-          <label style={{ display: 'grid', gap: 7, fontSize: 13, color: '#c8c5d2' }}>Email<input required type="email" value={email} onChange={(e) => setEmail(e.target.value)} style={inputStyle} autoComplete="email" /></label>
-          <label style={{ display: 'grid', gap: 7, fontSize: 13, color: '#c8c5d2' }}>Password<input required minLength={8} type="password" value={password} onChange={(e) => setPassword(e.target.value)} style={inputStyle} autoComplete={mode === 'login' ? 'current-password' : 'new-password'} /></label>
+          {mode === 'signup' && <label style={{ display: 'grid', gap: 7, fontSize: 13, color: '#c8c5d2' }}>Display name<input required value={displayName} onChange={(event) => setDisplayName(event.target.value)} style={inputStyle} autoComplete="name" /></label>}
+          <label style={{ display: 'grid', gap: 7, fontSize: 13, color: '#c8c5d2' }}>Email<input required type="email" value={email} onChange={(event) => setEmail(event.target.value)} style={inputStyle} autoComplete="email" /></label>
+          <label style={{ display: 'grid', gap: 7, fontSize: 13, color: '#c8c5d2' }}>Password<input required minLength={8} type="password" value={password} onChange={(event) => setPassword(event.target.value)} style={inputStyle} autoComplete={mode === 'login' ? 'current-password' : 'new-password'} /></label>
           <button disabled={loading || !hasSupabaseEnv} className="submit-button" style={{ marginTop: 6, minHeight: 48, justifyContent: 'center' }}>{loading ? <span className="spinner" /> : mode === 'login' ? 'Sign in' : 'Create account'}</button>
         </form>
 
