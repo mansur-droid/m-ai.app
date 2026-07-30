@@ -1,0 +1,220 @@
+import {
+  AIProviderError,
+  type AIProvider,
+  type ChatRequest,
+  type ChatResult,
+  type ModelDescriptor,
+  type ProviderConfig,
+} from '@/lib/ai/types';
+import { getProviderApiKey } from '@/lib/ai/providers';
+
+async function readError(response: Response): Promise<unknown> {
+  const text = await response.text();
+  try {
+    return JSON.parse(text);
+  } catch {
+    return text;
+  }
+}
+
+function assertOk(response: Response, config: ProviderConfig, details: unknown): void {
+  if (!response.ok) {
+    throw new AIProviderError(
+      `${config.name} request failed with status ${response.status}.`,
+      config.id,
+      response.status,
+      details,
+    );
+  }
+}
+
+export class HttpAIProvider implements AIProvider {
+  constructor(public readonly config: ProviderConfig) {}
+
+  private headers(): HeadersInit {
+    const key = getProviderApiKey(this.config);
+
+    if (this.config.protocol === 'anthropic') {
+      return {
+        'content-type': 'application/json',
+        'x-api-key': key,
+        'anthropic-version': '2023-06-01',
+      };
+    }
+
+    if (this.config.protocol === 'gemini') {
+      return { 'content-type': 'application/json' };
+    }
+
+    return {
+      'content-type': 'application/json',
+      authorization: `Bearer ${key}`,
+      ...(this.config.id === 'openrouter'
+        ? {
+            'HTTP-Referer': process.env.NEXT_PUBLIC_APP_URL ?? 'https://m-ai.app',
+            'X-OpenRouter-Title': 'm.ai',
+          }
+        : {}),
+    };
+  }
+
+  async listModels(signal?: AbortSignal): Promise<ModelDescriptor[]> {
+    const key = getProviderApiKey(this.config);
+    const url = this.config.protocol === 'gemini'
+      ? `${this.config.baseUrl}/models?key=${encodeURIComponent(key)}`
+      : `${this.config.baseUrl}/models`;
+
+    const response = await fetch(url, {
+      headers: this.headers(),
+      signal,
+      cache: 'no-store',
+    });
+
+    if (!response.ok) {
+      const details = await readError(response);
+      assertOk(response, this.config, details);
+    }
+
+    const payload = await response.json() as Record<string, unknown>;
+    const rawModels = (payload.data ?? payload.models ?? []) as Array<Record<string, unknown>>;
+
+    return rawModels
+      .map((model): ModelDescriptor | null => {
+        const rawId = String(model.id ?? model.name ?? '');
+        if (!rawId) return null;
+        const id = rawId.replace(/^models\//, '');
+        const methods = Array.isArray(model.supportedGenerationMethods)
+          ? model.supportedGenerationMethods.map(String)
+          : [];
+        if (this.config.protocol === 'gemini' && methods.length && !methods.includes('generateContent')) return null;
+
+        const architecture = (model.architecture ?? {}) as Record<string, unknown>;
+        return {
+          id,
+          name: String(model.displayName ?? model.name ?? id),
+          provider: this.config.id,
+          contextWindow: Number(model.context_length ?? model.inputTokenLimit) || undefined,
+          inputModalities: Array.isArray(architecture.input_modalities)
+            ? architecture.input_modalities.map(String)
+            : undefined,
+          outputModalities: Array.isArray(architecture.output_modalities)
+            ? architecture.output_modalities.map(String)
+            : undefined,
+        };
+      })
+      .filter((model): model is ModelDescriptor => Boolean(model))
+      .sort((a, b) => a.name.localeCompare(b.name));
+  }
+
+  async chat(request: ChatRequest): Promise<ChatResult> {
+    if (request.provider !== this.config.id) {
+      throw new AIProviderError('Provider mismatch in gateway request.', this.config.id, 400);
+    }
+
+    if (this.config.protocol === 'anthropic') return this.chatAnthropic(request);
+    if (this.config.protocol === 'gemini') return this.chatGemini(request);
+    return this.chatOpenAICompatible(request);
+  }
+
+  private async chatOpenAICompatible(request: ChatRequest): Promise<ChatResult> {
+    const response = await fetch(`${this.config.baseUrl}/chat/completions`, {
+      method: 'POST',
+      headers: this.headers(),
+      signal: request.signal,
+      body: JSON.stringify({
+        model: request.model,
+        messages: request.messages,
+        max_tokens: request.maxOutputTokens,
+      }),
+    });
+    const payload = await response.json().catch(() => ({})) as Record<string, any>;
+    assertOk(response, this.config, payload);
+
+    return {
+      provider: this.config.id,
+      model: String(payload.model ?? request.model),
+      text: String(payload.choices?.[0]?.message?.content ?? ''),
+      usage: {
+        inputTokens: payload.usage?.prompt_tokens,
+        outputTokens: payload.usage?.completion_tokens,
+        totalTokens: payload.usage?.total_tokens,
+      },
+    };
+  }
+
+  private async chatAnthropic(request: ChatRequest): Promise<ChatResult> {
+    const system = request.messages.filter((message) => message.role === 'system').map((message) => message.content).join('\n\n');
+    const messages = request.messages
+      .filter((message) => message.role !== 'system')
+      .map((message) => ({ role: message.role, content: message.content }));
+
+    const response = await fetch(`${this.config.baseUrl}/messages`, {
+      method: 'POST',
+      headers: this.headers(),
+      signal: request.signal,
+      body: JSON.stringify({
+        model: request.model,
+        system: system || undefined,
+        messages,
+        max_tokens: request.maxOutputTokens ?? 4096,
+      }),
+    });
+    const payload = await response.json().catch(() => ({})) as Record<string, any>;
+    assertOk(response, this.config, payload);
+
+    const text = Array.isArray(payload.content)
+      ? payload.content.filter((block: any) => block.type === 'text').map((block: any) => block.text).join('')
+      : '';
+
+    return {
+      provider: this.config.id,
+      model: String(payload.model ?? request.model),
+      text,
+      usage: {
+        inputTokens: payload.usage?.input_tokens,
+        outputTokens: payload.usage?.output_tokens,
+      },
+    };
+  }
+
+  private async chatGemini(request: ChatRequest): Promise<ChatResult> {
+    const key = getProviderApiKey(this.config);
+    const system = request.messages.filter((message) => message.role === 'system').map((message) => message.content).join('\n\n');
+    const contents = request.messages
+      .filter((message) => message.role !== 'system')
+      .map((message) => ({
+        role: message.role === 'assistant' ? 'model' : 'user',
+        parts: [{ text: message.content }],
+      }));
+
+    const response = await fetch(
+      `${this.config.baseUrl}/models/${encodeURIComponent(request.model)}:generateContent?key=${encodeURIComponent(key)}`,
+      {
+        method: 'POST',
+        headers: this.headers(),
+        signal: request.signal,
+        body: JSON.stringify({
+          systemInstruction: system ? { parts: [{ text: system }] } : undefined,
+          contents,
+          generationConfig: request.maxOutputTokens ? { maxOutputTokens: request.maxOutputTokens } : undefined,
+        }),
+      },
+    );
+    const payload = await response.json().catch(() => ({})) as Record<string, any>;
+    assertOk(response, this.config, payload);
+
+    const parts = payload.candidates?.[0]?.content?.parts;
+    const text = Array.isArray(parts) ? parts.map((part: any) => part.text ?? '').join('') : '';
+
+    return {
+      provider: this.config.id,
+      model: request.model,
+      text,
+      usage: {
+        inputTokens: payload.usageMetadata?.promptTokenCount,
+        outputTokens: payload.usageMetadata?.candidatesTokenCount,
+        totalTokens: payload.usageMetadata?.totalTokenCount,
+      },
+    };
+  }
+}
