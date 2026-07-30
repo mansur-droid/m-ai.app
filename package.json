@@ -4,7 +4,7 @@
   "version": "0.2.0",
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "tsc --noEmit",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit"
