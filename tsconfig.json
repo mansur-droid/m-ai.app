@@ -13,7 +13,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "incremental": true,
+    "incremental": false,
     "plugins": [{ "name": "next" }],
     "baseUrl": ".",
     "paths": {
@@ -22,9 +22,9 @@
   },
   "include": [
     "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts"
+    "lib/env.ts",
+    "lib/supabase/**/*.ts",
+    "middleware.ts"
   ],
   "exclude": ["node_modules"]
 }
