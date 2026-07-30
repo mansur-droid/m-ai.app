@@ -1,16 +1,17 @@
-name: Build diagnostics
+name: Production build verification
 
 on:
   push:
-    branches: [main]
+    branches: [verify-production-cleanup]
     paths-ignore:
-      - 'ci/build-report.txt'
+      - 'package-lock.json'
+      - 'ci/production-build-verification.txt'
 
 permissions:
   contents: write
 
 jobs:
-  diagnose:
+  verify:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -19,36 +20,30 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Install dependencies
-        run: npm install
-      - name: Run strict typecheck and production build
-        shell: bash
-        run: |
-          set +e
-          {
-            echo "Commit: $GITHUB_SHA"
-            echo
-            echo "=== npm run typecheck ==="
-            npm run typecheck
-            TYPECHECK_EXIT=$?
-            echo
-            echo "=== npm run build ==="
-            npm run build
-            BUILD_EXIT=$?
-            echo
-            echo "TYPECHECK_EXIT=$TYPECHECK_EXIT"
-            echo "BUILD_EXIT=$BUILD_EXIT"
-          } 2>&1 | tee /tmp/build-report.txt
-          exit 0
-      - name: Publish diagnostic report
+      - name: Create deterministic lockfile
+        run: npm install --package-lock-only --ignore-scripts
+      - name: Install from lockfile
+        run: npm ci
+      - name: Run strict TypeScript check
+        run: npm run typecheck
+      - name: Run Next.js production build
+        run: npm run build
+      - name: Record successful verification
         run: |
           mkdir -p ci
-          cp /tmp/build-report.txt ci/build-report.txt
+          {
+            echo "Commit: $GITHUB_SHA"
+            echo "Node: $(node --version)"
+            echo "npm: $(npm --version)"
+            echo "npm ci: PASS"
+            echo "npm run typecheck: PASS"
+            echo "npm run build: PASS"
+          } > ci/production-build-verification.txt
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add ci/build-report.txt
+          git add package-lock.json ci/production-build-verification.txt
           if git diff --cached --quiet; then
             exit 0
           fi
-          git commit -m "ci: publish latest build diagnostics"
+          git commit -m "chore: record verified production build [skip ci]"
           git push
