@@ -23,8 +23,7 @@
   "include": [
     "next-env.d.ts",
     "lib/env.ts",
-    "lib/supabase/**/*.ts",
-    "middleware.ts"
+    "lib/supabase/server.ts"
   ],
   "exclude": ["node_modules"]
 }
