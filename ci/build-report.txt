@@ -1,4 +1,4 @@
-Commit: 15224e200cfcdce8ef53b855e8ab7155dab06114
+Commit: 2abea6ddb95ca69d45d714b47b506eee69f1db7d
 
 === npm run typecheck ===
 
@@ -68,7 +68,7 @@ https://nextjs.org/telemetry
    Creating an optimized production build ...
 <w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (106kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
 <w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (250kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
- ⚠ Compiled with warnings in 1809ms
+ ⚠ Compiled with warnings in 2.1s
 
 ./node_modules/@supabase/supabase-js/dist/index.mjs
 A Node.js API is used (process.version at line: 27) which is not supported in the Edge Runtime.
@@ -79,7 +79,7 @@ Import trace for requested module:
 ./node_modules/@supabase/ssr/dist/module/createBrowserClient.js
 ./node_modules/@supabase/ssr/dist/module/index.js
 
- ✓ Compiled successfully in 8.1s
+ ✓ Compiled successfully in 8.3s
    Linting and checking validity of types ...
 
    We detected TypeScript in your project and reconfigured your tsconfig.json file for you.
@@ -103,20 +103,31 @@ Import trace for requested module:
    Collecting page data ...
    Generating static pages (0/6) ...
    Generating static pages (1/6) 
- ⨯ useSearchParams() should be wrapped in a suspense boundary at page "/login". Read more: https://nextjs.org/docs/messages/missing-suspense-with-csr-bailout
-    at g (/home/runner/work/m-ai.app/m-ai.app/.next/server/chunks/361.js:9:55016)
-    at m (/home/runner/work/m-ai.app/m-ai.app/.next/server/chunks/361.js:1:25404)
-    at c9 (/home/runner/work/m-ai.app/m-ai.app/.next/server/app/login/page.js:37:64292)
-    at n3 (/home/runner/work/m-ai.app/m-ai.app/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:2:82831)
-    at n6 (/home/runner/work/m-ai.app/m-ai.app/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:2:84601)
-    at n5 (/home/runner/work/m-ai.app/m-ai.app/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:2:104801)
-    at n7 (/home/runner/work/m-ai.app/m-ai.app/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:2:102219)
-    at n8 (/home/runner/work/m-ai.app/m-ai.app/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:2:83183)
-    at n6 (/home/runner/work/m-ai.app/m-ai.app/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:2:84647)
-    at n6 (/home/runner/work/m-ai.app/m-ai.app/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:2:101560)
-Error occurred prerendering page "/login". Read more: https://nextjs.org/docs/messages/prerender-error
-Export encountered an error on /login/page: /login, exiting the build.
- ⨯ Next.js build worker exited with code: 1 and signal: null
+   Generating static pages (2/6) 
+   Generating static pages (4/6) 
+ ✓ Generating static pages (6/6)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                 Size  First Load JS
+┌ ○ /                                    3.38 kB         105 kB
+├ ○ /_not-found                            991 B         103 kB
+├ ƒ /api/ai/chat                           132 B         102 kB
+├ ƒ /api/ai/models/[provider]              132 B         102 kB
+├ ƒ /api/ai/providers                      132 B         102 kB
+├ ƒ /auth/callback                         132 B         102 kB
+└ ○ /login                               66.4 kB         168 kB
++ First Load JS shared by all             102 kB
+  ├ chunks/255-e3bf15caf1f1e0f9.js       45.7 kB
+  ├ chunks/4bd1b696-c023c6e3521b1417.js  54.2 kB
+  └ other shared chunks (total)          1.92 kB
+
+
+ƒ Middleware                             90.4 kB
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
 
 TYPECHECK_EXIT=2
-BUILD_EXIT=1
+BUILD_EXIT=0
