@@ -1,56 +1,10 @@
-Commit: 2abea6ddb95ca69d45d714b47b506eee69f1db7d
+Commit: 5eaa1ed06dc70e0363eb9a1e185f71dbce9a2f7a
 
 === npm run typecheck ===
 
 > m-ai@0.2.0 typecheck
 > tsc --noEmit
 
-node_modules/@supabase/ssr/dist/main/createBrowserClient.d.ts(2,59): error TS2307: Cannot find module '@supabase/supabase-js/dist/module/lib/types' or its corresponding type declarations.
-node_modules/@supabase/ssr/dist/main/createBrowserClient.d.ts(26,30): error TS2344: Type 'SchemaName' does not satisfy the constraint '{ PostgrestVersion: string; } | (string & Exclude<keyof Database, "__InternalSupabase">)'.
-  Type 'string & keyof Database' is not assignable to type '{ PostgrestVersion: string; } | (string & Exclude<keyof Database, "__InternalSupabase">)'.
-    Type 'string & keyof Database' is not assignable to type 'string & Exclude<keyof Database, "__InternalSupabase">'.
-      Type 'string & keyof Database' is not assignable to type 'Exclude<keyof Database, "__InternalSupabase">'.
-        Type 'SchemaName' is not assignable to type 'string & Exclude<keyof Database, "__InternalSupabase">'.
-          Type 'string & keyof Database' is not assignable to type 'string & Exclude<keyof Database, "__InternalSupabase">'.
-            Type 'string & keyof Database' is not assignable to type 'Exclude<keyof Database, "__InternalSupabase">'.
-              Type 'SchemaName' is not assignable to type 'Exclude<keyof Database, "__InternalSupabase">'.
-                Type 'string & keyof Database' is not assignable to type 'Exclude<keyof Database, "__InternalSupabase">'.
-node_modules/@supabase/ssr/dist/main/createBrowserClient.d.ts(37,30): error TS2344: Type 'SchemaName' does not satisfy the constraint '{ PostgrestVersion: string; } | (string & Exclude<keyof Database, "__InternalSupabase">)'.
-  Type 'string & keyof Database' is not assignable to type '{ PostgrestVersion: string; } | (string & Exclude<keyof Database, "__InternalSupabase">)'.
-    Type 'string & keyof Database' is not assignable to type 'string & Exclude<keyof Database, "__InternalSupabase">'.
-      Type 'string & keyof Database' is not assignable to type 'Exclude<keyof Database, "__InternalSupabase">'.
-        Type 'SchemaName' is not assignable to type 'string & Exclude<keyof Database, "__InternalSupabase">'.
-          Type 'string & keyof Database' is not assignable to type 'string & Exclude<keyof Database, "__InternalSupabase">'.
-            Type 'string & keyof Database' is not assignable to type 'Exclude<keyof Database, "__InternalSupabase">'.
-              Type 'SchemaName' is not assignable to type 'Exclude<keyof Database, "__InternalSupabase">'.
-                Type 'string & keyof Database' is not assignable to type 'Exclude<keyof Database, "__InternalSupabase">'.
-node_modules/@supabase/ssr/dist/main/createServerClient.d.ts(2,59): error TS2307: Cannot find module '@supabase/supabase-js/dist/module/lib/types' or its corresponding type declarations.
-node_modules/@supabase/ssr/dist/main/createServerClient.d.ts(13,30): error TS2344: Type 'SchemaName' does not satisfy the constraint '{ PostgrestVersion: string; } | (string & Exclude<keyof Database, "__InternalSupabase">)'.
-  Type 'string & keyof Database' is not assignable to type '{ PostgrestVersion: string; } | (string & Exclude<keyof Database, "__InternalSupabase">)'.
-    Type 'string & keyof Database' is not assignable to type 'string & Exclude<keyof Database, "__InternalSupabase">'.
-      Type 'string & keyof Database' is not assignable to type 'Exclude<keyof Database, "__InternalSupabase">'.
-        Type 'SchemaName' is not assignable to type 'string & Exclude<keyof Database, "__InternalSupabase">'.
-          Type 'string & keyof Database' is not assignable to type 'string & Exclude<keyof Database, "__InternalSupabase">'.
-            Type 'string & keyof Database' is not assignable to type 'Exclude<keyof Database, "__InternalSupabase">'.
-              Type 'SchemaName' is not assignable to type 'Exclude<keyof Database, "__InternalSupabase">'.
-                Type 'string & keyof Database' is not assignable to type 'Exclude<keyof Database, "__InternalSupabase">'.
-node_modules/@supabase/ssr/dist/main/createServerClient.d.ts(79,30): error TS2344: Type 'SchemaName' does not satisfy the constraint '{ PostgrestVersion: string; } | (string & Exclude<keyof Database, "__InternalSupabase">)'.
-  Type 'string & keyof Database' is not assignable to type '{ PostgrestVersion: string; } | (string & Exclude<keyof Database, "__InternalSupabase">)'.
-    Type 'string & keyof Database' is not assignable to type 'string & Exclude<keyof Database, "__InternalSupabase">'.
-      Type 'string & keyof Database' is not assignable to type 'Exclude<keyof Database, "__InternalSupabase">'.
-        Type 'SchemaName' is not assignable to type 'string & Exclude<keyof Database, "__InternalSupabase">'.
-          Type 'string & keyof Database' is not assignable to type 'string & Exclude<keyof Database, "__InternalSupabase">'.
-            Type 'string & keyof Database' is not assignable to type 'Exclude<keyof Database, "__InternalSupabase">'.
-              Type 'SchemaName' is not assignable to type 'Exclude<keyof Database, "__InternalSupabase">'.
-                Type 'string & keyof Database' is not assignable to type 'Exclude<keyof Database, "__InternalSupabase">'.
-node_modules/next/dist/server/route-modules/app-page/vendored/rsc/entrypoints.d.ts(2,27): error TS7016: Could not find a declaration file for module 'react-dom'. '/home/runner/work/m-ai.app/m-ai.app/node_modules/react-dom/index.js' implicitly has an 'any' type.
-  Try `npm i --save-dev @types/react-dom` if it exists or add a new declaration (.d.ts) file containing `declare module 'react-dom';`
-node_modules/next/dist/server/route-modules/app-page/vendored/ssr/entrypoints.d.ts(2,27): error TS7016: Could not find a declaration file for module 'react-dom'. '/home/runner/work/m-ai.app/m-ai.app/node_modules/react-dom/index.js' implicitly has an 'any' type.
-  Try `npm i --save-dev @types/react-dom` if it exists or add a new declaration (.d.ts) file containing `declare module 'react-dom';`
-node_modules/next/dist/server/route-modules/app-page/vendored/ssr/entrypoints.d.ts(6,33): error TS7016: Could not find a declaration file for module 'react-dom/server'. '/home/runner/work/m-ai.app/m-ai.app/node_modules/react-dom/server.node.js' implicitly has an 'any' type.
-  Try `npm i --save-dev @types/react-dom` if it exists or add a new declaration (.d.ts) file containing `declare module 'react-dom/server';`
-node_modules/next/dist/types.d.ts(4,23): error TS2688: Cannot find type definition file for 'react-dom'.
-node_modules/next/dist/types.d.ts(5,23): error TS2688: Cannot find type definition file for 'react-dom/experimental'.
 
 === npm run build ===
 
@@ -68,7 +22,7 @@ https://nextjs.org/telemetry
    Creating an optimized production build ...
 <w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (106kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
 <w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (250kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
- ⚠ Compiled with warnings in 2.1s
+ ⚠ Compiled with warnings in 1282ms
 
 ./node_modules/@supabase/supabase-js/dist/index.mjs
 A Node.js API is used (process.version at line: 27) which is not supported in the Edge Runtime.
@@ -79,27 +33,8 @@ Import trace for requested module:
 ./node_modules/@supabase/ssr/dist/module/createBrowserClient.js
 ./node_modules/@supabase/ssr/dist/module/index.js
 
- ✓ Compiled successfully in 8.3s
+ ✓ Compiled successfully in 5.6s
    Linting and checking validity of types ...
-
-   We detected TypeScript in your project and reconfigured your tsconfig.json file for you.
-   The following suggested values were added to your tsconfig.json. These values can be changed to fit your project's needs:
-
-   	- lib was set to dom,dom.iterable,esnext
-   	- allowJs was set to true
-   	- skipLibCheck was set to true
-   	- noEmit was set to true
-   	- incremental was set to true
-   	- include was set to ['next-env.d.ts', '.next/types/**/*.ts', '**/*.ts', '**/*.tsx']
-   	- plugins was updated to add { name: 'next' }
-   	- exclude was set to ['node_modules']
-
-   The following mandatory changes were made to your tsconfig.json:
-
-   	- esModuleInterop was set to true (requirement for SWC / babel)
-   	- resolveJsonModule was set to true (to match webpack resolution)
-   	- isolatedModules was set to true (requirement for SWC / Babel)
-
    Collecting page data ...
    Generating static pages (0/6) ...
    Generating static pages (1/6) 
@@ -129,5 +64,5 @@ Route (app)                                 Size  First Load JS
 ƒ  (Dynamic)  server-rendered on demand
 
 
-TYPECHECK_EXIT=2
+TYPECHECK_EXIT=0
 BUILD_EXIT=0
