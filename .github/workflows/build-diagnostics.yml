@@ -23,3 +23,9 @@ jobs:
         run: npm run typecheck
       - name: Run Next.js production build
         run: npm run build
+      - name: Upload verified lockfile
+        uses: actions/upload-artifact@v4
+        with:
+          name: verified-package-lock
+          path: package-lock.json
+          if-no-files-found: error
