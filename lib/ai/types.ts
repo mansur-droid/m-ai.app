@@ -47,7 +47,7 @@ export interface ChatResult {
 }
 
 export type ChatStreamEvent =
-  | { type: 'start'; provider: ProviderId; model: string }
+  | { type: 'start'; provider: ProviderId; model: string; conversationId?: string }
   | { type: 'delta'; text: string }
   | { type: 'usage'; usage: TokenUsage }
   | { type: 'done'; finishReason?: string }
