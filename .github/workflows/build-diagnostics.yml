@@ -20,6 +20,8 @@ jobs:
           cache: npm
       - name: Install dependencies from lockfile
         run: npm ci
+      - name: Confirm patched framework version
+        run: node -e "const p=require('./node_modules/next/package.json'); if(p.version!=='15.5.21'){throw new Error('Expected next 15.5.21, got '+p.version)}; console.log('next',p.version)"
       - name: Run strict TypeScript check
         run: npm run typecheck
       - name: Run Next.js production build
