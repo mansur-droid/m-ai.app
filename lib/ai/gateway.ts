@@ -1,13 +1,10 @@
 import { HttpAIProvider } from '@/lib/ai/http-provider';
-import {
-  getDefaultModel,
-  getProviderConfig,
-  getProviderApiKey,
-} from '@/lib/ai/providers';
+import { getDefaultModel, getProviderApiKey, getProviderConfig } from '@/lib/ai/providers';
 import type {
   AIProvider,
   ChatRequest,
   ChatResult,
+  ChatStreamEvent,
   ModelDescriptor,
   ProviderId,
 } from '@/lib/ai/types';
@@ -17,7 +14,6 @@ const providerCache = new Map<ProviderId, AIProvider>();
 export function getAIProvider(providerId: ProviderId): AIProvider {
   const existing = providerCache.get(providerId);
   if (existing) return existing;
-
   const provider = new HttpAIProvider(getProviderConfig(providerId));
   providerCache.set(providerId, provider);
   return provider;
@@ -35,20 +31,32 @@ export async function listProviderModels(
   return getAIProvider(providerId).listModels(signal);
 }
 
-export async function generateChatCompletion(
+function resolveChatRequest(
   request: Omit<ChatRequest, 'model'> & { model?: string },
-): Promise<ChatResult> {
+): ChatRequest {
   const config = getProviderConfig(request.provider);
   assertProviderConfigured(request.provider);
-
   const model = request.model || getDefaultModel(config);
+
   if (!model) {
     throw new Error(
       `No model selected for ${config.name}. Select one in the interface or set ${config.defaultModelEnv}.`,
     );
   }
-
   if (!request.messages.length) throw new Error('At least one chat message is required.');
+  return { ...request, model };
+}
 
-  return getAIProvider(request.provider).chat({ ...request, model });
+export async function generateChatCompletion(
+  request: Omit<ChatRequest, 'model'> & { model?: string },
+): Promise<ChatResult> {
+  const resolved = resolveChatRequest(request);
+  return getAIProvider(resolved.provider).chat(resolved);
+}
+
+export function streamChatCompletion(
+  request: Omit<ChatRequest, 'model'> & { model?: string },
+): AsyncGenerator<ChatStreamEvent> {
+  const resolved = resolveChatRequest(request);
+  return getAIProvider(resolved.provider).streamChat(resolved);
 }

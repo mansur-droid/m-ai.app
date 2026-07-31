@@ -33,21 +33,31 @@ export interface ChatRequest {
   signal?: AbortSignal;
 }
 
+export interface TokenUsage {
+  inputTokens?: number;
+  outputTokens?: number;
+  totalTokens?: number;
+}
+
 export interface ChatResult {
   provider: ProviderId;
   model: string;
   text: string;
-  usage?: {
-    inputTokens?: number;
-    outputTokens?: number;
-    totalTokens?: number;
-  };
+  usage?: TokenUsage;
 }
+
+export type ChatStreamEvent =
+  | { type: 'start'; provider: ProviderId; model: string }
+  | { type: 'delta'; text: string }
+  | { type: 'usage'; usage: TokenUsage }
+  | { type: 'done'; finishReason?: string }
+  | { type: 'error'; message: string };
 
 export interface AIProvider {
   readonly config: ProviderConfig;
   listModels(signal?: AbortSignal): Promise<ModelDescriptor[]>;
   chat(request: ChatRequest): Promise<ChatResult>;
+  streamChat(request: ChatRequest): AsyncGenerator<ChatStreamEvent>;
 }
 
 export class AIProviderError extends Error {
