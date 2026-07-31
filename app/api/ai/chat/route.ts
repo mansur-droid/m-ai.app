@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
-import { generateChatCompletion } from '@/lib/ai/gateway';
+import { streamChatCompletion } from '@/lib/ai/gateway';
 import { providerIds } from '@/lib/ai/providers';
-import type { ChatMessage, ProviderId } from '@/lib/ai/types';
+import type { ChatMessage, ChatStreamEvent, ProviderId } from '@/lib/ai/types';
 import { createClient } from '@/lib/supabase/server';
 
 export const runtime = 'nodejs';
@@ -13,6 +13,10 @@ type RequestBody = {
   messages?: ChatMessage[];
   maxOutputTokens?: number;
 };
+
+function encodeEvent(event: ChatStreamEvent): Uint8Array {
+  return new TextEncoder().encode(`data: ${JSON.stringify(event)}\n\n`);
+}
 
 export async function POST(request: Request) {
   const supabase = await createClient();
@@ -47,18 +51,44 @@ export async function POST(request: Request) {
     ? undefined
     : Math.max(1, Math.min(32768, Math.floor(body.maxOutputTokens)));
 
+  let providerStream: AsyncGenerator<ChatStreamEvent>;
   try {
-    const result = await generateChatCompletion({
+    providerStream = streamChatCompletion({
       provider: body.provider as ProviderId,
       model: body.model?.trim() || undefined,
       messages: body.messages,
       maxOutputTokens,
       signal: request.signal,
     });
-
-    return NextResponse.json(result);
   } catch (error) {
     const message = error instanceof Error ? error.message : 'AI provider request failed.';
     return NextResponse.json({ error: message }, { status: 502 });
   }
+
+  const stream = new ReadableStream<Uint8Array>({
+    async start(controller) {
+      try {
+        for await (const event of providerStream) {
+          controller.enqueue(encodeEvent(event));
+        }
+      } catch (error) {
+        const message = error instanceof Error ? error.message : 'AI provider stream failed.';
+        controller.enqueue(encodeEvent({ type: 'error', message }));
+      } finally {
+        controller.close();
+      }
+    },
+    async cancel() {
+      await providerStream.return(undefined);
+    },
+  });
+
+  return new Response(stream, {
+    headers: {
+      'Content-Type': 'text/event-stream; charset=utf-8',
+      'Cache-Control': 'no-cache, no-transform',
+      Connection: 'keep-alive',
+      'X-Accel-Buffering': 'no',
+    },
+  });
 }
